@@ -1,6 +1,8 @@
 extern crate gnuplot;
+extern crate statistical;
 
 use gnuplot::{Figure, Color, Caption, DataType, PlotOption};
+use statistical::*;
 
 use std::io::Read;
 use std::ops::{Range};
@@ -51,12 +53,14 @@ impl Axes2DExtension for gnuplot::Axes2D {
     }
 }
 
+
 fn main() {
     let digits = read_input("input");
     let mean_value = mean(&digits);
     println!("mean: {}", mean_value);
-    println!("variance: {}", variance(&digits));
+    println!("variance: {}", variance(&digits, None));
     println!("standart error: {}", standart_error(&digits));
+    println!("median: {}", median(&digits));
     let mut fg = Figure::new();
     fg.axes2d()
         .boxes(
@@ -69,11 +73,15 @@ fn main() {
             &[Color("red"), Caption("mean")]
         )
         .horizontal_line(
-            mean(&digits) - variance(&digits), (0, digits.len()),
+            mean(&digits) - variance(&digits, None), (0, digits.len()),
             &[Caption("variance")]
         )
         .horizontal_line(
-            mean(&digits) + variance(&digits), (0, digits.len()),
+            mean(&digits) + variance(&digits, None), (0, digits.len()),
+            &[]
+        )
+        .horizontal_line(
+            median(&digits), (0, digits.len()),
             &[]
         );
     let mut distribution = Figure::new();
