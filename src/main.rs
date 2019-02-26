@@ -53,14 +53,18 @@ impl Axes2DExtension for gnuplot::Axes2D {
     }
 }
 
+fn print_description(data: &Vec<f32>){
+    println!("mean:           {}", mean(data)           );
+    println!("variance:       {}", variance(data, None) );
+    println!("standart error: {}", standart_error(data) );
+    println!("median:         {}", median(data)         );
+    println!("min:            {}", max(data)            );
+    println!("min:            {}", min(data)            );
+}
 
 fn main() {
     let digits = read_input("input");
-    let mean_value = mean(&digits);
-    println!("mean: {}", mean_value);
-    println!("variance: {}", variance(&digits, None));
-    println!("standart error: {}", standart_error(&digits));
-    println!("median: {}", median(&digits));
+    print_description(&digits);
     let mut fg = Figure::new();
     fg.axes2d()
         .boxes(
@@ -88,7 +92,7 @@ fn main() {
     distribution.axes2d()
         .function(
             |x| probability_less_than(x, &digits),
-            (12.0, 23.0), 0.1,
+            (min(&digits), max(&digits)), 0.1,
             &[]
         );
     fg.show();
