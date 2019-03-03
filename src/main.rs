@@ -29,6 +29,9 @@ trait Axes2DExtension{
         step: f32,
         options: &[PlotOption<&str>]
     ) -> &'l mut Self;
+
+    fn horizontal_fill<Tx: DataType>(&mut self, center: f32, hight: f32, interval: (Tx, Tx),
+                             options: &[PlotOption<&str>]) -> &mut Self;
 }
 
 impl Axes2DExtension for gnuplot::Axes2D {
@@ -51,6 +54,16 @@ impl Axes2DExtension for gnuplot::Axes2D {
         let y = x.clone().map(func);
         self.lines( x, y, options )
     }
+
+    fn horizontal_fill<Tx: DataType>(&mut self, center: f32, hight: f32, interval: (Tx, Tx),
+                       options: &[PlotOption<&str>]) -> &mut Self {
+        self.fill_between(
+            &[interval.0.get(), interval.1.get()],
+            &[center - hight/2.0, center - hight/2.0],
+            &[center + hight/2.0, center + hight/2.0],
+            options
+        )
+    }
 }
 
 fn print_description(data: &[f32]){
@@ -61,8 +74,6 @@ fn print_description(data: &[f32]){
     println!("median:         {}", median(data)         );
     println!("max:            {}", max(data)            );
     println!("min:            {}", min(data)            );
-
-
     println!("quartille 1:    {}", percentile(data, 0.25));
     println!("quartille 2:    {}", percentile(data, 0.50));
     println!("quartille 3:    {}", percentile(data, 0.75));
@@ -78,25 +89,30 @@ fn main() {
             &digits,
             &[Color("blue")],
         )
+        .horizontal_fill(
+            mean(&digits), variance(&digits, None)*2.0, (0, digits.len()),
+            &[Color("#01ffffff"), Caption("variance")]
+
+        )
         .horizontal_line(
             mean(&digits), (0, digits.len()),
             &[Color("red"), Caption("mean")]
         )
         .horizontal_line(
-            mean(&digits) - variance(&digits, None), (0, digits.len()),
-            &[Caption("variance")]
-        )
-        .horizontal_line(
-            mean(&digits) + variance(&digits, None), (0, digits.len()),
-            &[]
+            percentile(&digits, 0.25), (0, digits.len()),
+            &[Caption("quartille 1")]
         )
         .horizontal_line(
             median(&digits), (0, digits.len()),
             &[]
         )
         .horizontal_line(
-            math::mode(&digits, 0.5) + 0.25, (0, digits.len()),
-            &[LineWidth(20.0), Color("#8000ff00"), Caption("mode")]
+            percentile(&digits, 0.75), (0, digits.len()),
+            &[Caption("quartille 3")]
+        )
+        .horizontal_fill(
+            math::mode(&digits, 0.5) + 0.25, 0.5, (0, digits.len()),
+            &[LineWidth(20.0), Color("#8000ff00"), Caption("mode interval (+/- 0.5)")]
         );
     let mut distribution = Figure::new();
     distribution.axes2d()
