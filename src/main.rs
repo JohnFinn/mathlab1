@@ -1,7 +1,7 @@
 extern crate gnuplot;
 extern crate statistical;
 
-use gnuplot::{Figure, Color, Caption, LineWidth,};
+use gnuplot::{Figure, Color, Caption, LineWidth, AxesCommon, AutoOption::*};
 use statistical::*;
 
 use std::io::Read;
@@ -84,7 +84,20 @@ fn main() {
             intervals.iter().map(|&x| x as f32 / digits.len() as f32),
             &[]
         );
+    let mut boxes_whiskers = Figure::new();
+    boxes_whiskers.axes2d()
+        .set_x_range(Fix(-1.0), Fix(1.0))
+        .box_and_whisker_set_width(
+            &[0],
+            &[percentile(&digits, 0.25)],
+            &[percentile(&digits, 0.05)],
+            &[percentile(&digits, 0.95)],
+            &[percentile(&digits, 0.75)],
+            &[1],
+            &[]
+        );
     fg.show();
     distribution.show();
     intervals_figure.show();
+    boxes_whiskers.show();
 }
