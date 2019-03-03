@@ -53,7 +53,7 @@ impl Axes2DExtension for gnuplot::Axes2D {
     }
 }
 
-fn print_description(data: &Vec<f32>){
+fn print_description(data: &[f32]){
     println!("mode:           {}", math::mode(data, 0.5));
     println!("mean:           {}", mean(data)           );
     println!("variance:       {}", variance(data, None) );

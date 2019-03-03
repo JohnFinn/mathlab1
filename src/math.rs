@@ -3,7 +3,7 @@ extern crate statistical;
 use std::ops::Deref;
 use statistical::*;
 
-pub fn intervals<T: Deref<Target=[f32]>>(collection: &T, interval: f32) -> Vec<i32> {
+pub fn intervals(collection: &[f32], interval: f32) -> Vec<i32> {
     let min = min(collection);
     let parts = ((max(collection) - min) / interval).ceil() as usize;
     let mut result = Vec::new();
@@ -16,13 +16,13 @@ pub fn intervals<T: Deref<Target=[f32]>>(collection: &T, interval: f32) -> Vec<i
 }
 
 
-pub fn mode<T: Deref<Target=[f32]>>(collection: &T, interval: f32) -> f32 {
+pub fn mode(collection: &[f32], interval: f32) -> f32 {
     let intervals = intervals(collection, interval);
     let index_of_max = intervals.iter().enumerate().max_by_key(|(_, &value)|value).unwrap().0;
     index_of_max as f32 * interval + min(collection)
 }
 
-pub fn min<T: Deref<Target=[f32]>>(collection: &T) -> f32 {
+pub fn min(collection: &[f32]) -> f32 {
     let mut current = std::f32::MAX;
     for &x in collection.iter() {
         if x < current {
@@ -32,7 +32,7 @@ pub fn min<T: Deref<Target=[f32]>>(collection: &T) -> f32 {
     current
 }
 
-pub fn max<T: Deref<Target=[f32]>>(collection: &T) -> f32 {
+pub fn max(collection: &[f32]) -> f32 {
     let mut current = std::f32::MIN;
     for &x in collection.iter() {
         if x > current {
@@ -42,11 +42,11 @@ pub fn max<T: Deref<Target=[f32]>>(collection: &T) -> f32 {
     current
 }
 
-pub fn standart_error<T: Deref<Target=[f32]>>(collection: &T) -> f32 {
+pub fn standart_error(collection: &[f32]) -> f32 {
     (variance(collection, None) / (collection.len() as f32)).sqrt()
 }
 
-pub fn probability_less_than<T: Deref<Target=[f32]>>(x: f32, collection: &T) -> f32 {
+pub fn probability_less_than(x: f32, collection: &[f32]) -> f32 {
     let less_than_x_count = collection.iter().filter(|a| **a < x).count();
     less_than_x_count as f32 / collection.len() as f32
 }
