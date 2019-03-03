@@ -6,4 +6,4 @@ authors = ["jouny <dz4tune@gmail.com>"]
 [dependencies]
 gnuplot="0.0.29"
 argparse-rs="0.1.0"
-statistical = "1.0.0"
+statistical = { git = "https://github.com/JohnFinn/statistical.git"}

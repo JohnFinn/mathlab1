@@ -1,7 +1,7 @@
 extern crate gnuplot;
 extern crate statistical;
 
-use gnuplot::{Figure, Color, Caption, DataType, PlotOption};
+use gnuplot::{Figure, Color, Caption, LineWidth, DataType, PlotOption};
 use statistical::*;
 
 use std::io::Read;
@@ -61,6 +61,11 @@ fn print_description(data: &Vec<f32>){
     println!("median:         {}", median(data)         );
     println!("max:            {}", max(data)            );
     println!("min:            {}", min(data)            );
+
+
+    println!("quartille 1:    {}", percentile(data, 0.25));
+    println!("quartille 2:    {}", percentile(data, 0.50));
+    println!("quartille 3:    {}", percentile(data, 0.75));
 }
 
 fn main() {
@@ -88,6 +93,10 @@ fn main() {
         .horizontal_line(
             median(&digits), (0, digits.len()),
             &[]
+        )
+        .horizontal_line(
+            math::mode(&digits, 0.5) + 0.25, (0, digits.len()),
+            &[LineWidth(20.0), Color("#8000ff00"), Caption("mode")]
         );
     let mut distribution = Figure::new();
     distribution.axes2d()
