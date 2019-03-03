@@ -54,11 +54,12 @@ impl Axes2DExtension for gnuplot::Axes2D {
 }
 
 fn print_description(data: &Vec<f32>){
+    println!("mode:           {}", math::mode(data, 0.5));
     println!("mean:           {}", mean(data)           );
     println!("variance:       {}", variance(data, None) );
     println!("standart error: {}", standart_error(data) );
     println!("median:         {}", median(data)         );
-    println!("min:            {}", max(data)            );
+    println!("max:            {}", max(data)            );
     println!("min:            {}", min(data)            );
 }
 
@@ -95,6 +96,16 @@ fn main() {
             (min(&digits), max(&digits)), 0.1,
             &[]
         );
+    let interval = 1.0/2.0;
+    let intervals = intervals(&digits, interval);
+    let mut intervals_figure = Figure::new();
+    intervals_figure.axes2d()
+        .boxes(
+            intervals.iter().enumerate().map(|(i, _)| interval / 2.0 + i as f32 * interval + min(&digits)),
+            intervals.iter().map(|&x| x as f32 / digits.len() as f32),
+            &[]
+        );
     fg.show();
     distribution.show();
+    intervals_figure.show();
 }
