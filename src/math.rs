@@ -15,6 +15,13 @@ pub fn intervals<T: Deref<Target=[f32]>>(collection: &T, interval: f32) -> Vec<i
     result
 }
 
+
+pub fn mode<T: Deref<Target=[f32]>>(collection: &T, interval: f32) -> f32 {
+    let intervals = intervals(collection, interval);
+    let index_of_max = intervals.iter().enumerate().max_by_key(|(_, &value)|value).unwrap().0;
+    index_of_max as f32 * interval + min(collection)
+}
+
 pub fn min<T: Deref<Target=[f32]>>(collection: &T) -> f32 {
     let mut current = std::f32::MAX;
     for &x in collection.iter() {
