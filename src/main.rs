@@ -47,7 +47,6 @@ fn main() {
         .horizontal_fill(
             mean(&digits), variance(&digits, None)*2.0, (0, digits.len()),
             &[Color("#01ffffff"), Caption("variance")]
-
         )
         .horizontal_line(
             mean(&digits), (0, digits.len()),
@@ -59,7 +58,7 @@ fn main() {
         )
         .horizontal_line(
             median(&digits), (0, digits.len()),
-            &[]
+            &[Caption("median")]
         )
         .horizontal_line(
             percentile(&digits, 0.75), (0, digits.len()),
