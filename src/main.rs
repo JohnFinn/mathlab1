@@ -1,11 +1,10 @@
 extern crate gnuplot;
 extern crate statistical;
 
-use gnuplot::{Figure, Color, Caption, LineWidth, DataType, PlotOption};
+use gnuplot::{Figure, Color, Caption, LineWidth,};
 use statistical::*;
 
 use std::io::Read;
-use std::ops::{Range};
 
 mod math;
 mod gnuplot_extension;
@@ -38,41 +37,42 @@ fn main() {
     let digits = read_input("input");
     print_description(&digits);
     let mut fg = Figure::new();
+    let rng = 0..digits.len();
     fg.axes2d()
         .boxes(
-            Range{start: 0, end: digits.len()},
+            rng.clone(),
             &digits,
             &[Color("blue")],
         )
         .horizontal_fill(
-            mean(&digits), variance(&digits, None)*2.0, (0, digits.len()),
+            mean(&digits), variance(&digits, None)*2.0, rng.clone(),
             &[Color("#01ffffff"), Caption("variance")]
         )
         .horizontal_line(
-            mean(&digits), (0, digits.len()),
+            mean(&digits), rng.clone(),
             &[Color("red"), Caption("mean")]
         )
         .horizontal_line(
-            percentile(&digits, 0.25), (0, digits.len()),
+            percentile(&digits, 0.25), rng.clone(),
             &[Caption("quartille 1")]
         )
         .horizontal_line(
-            median(&digits), (0, digits.len()),
+            median(&digits), rng.clone(),
             &[Caption("median")]
         )
         .horizontal_line(
-            percentile(&digits, 0.75), (0, digits.len()),
+            percentile(&digits, 0.75), rng.clone(),
             &[Caption("quartille 3")]
         )
         .horizontal_fill(
-            math::mode(&digits, 0.5) + 0.25, 0.5, (0, digits.len()),
+            math::mode(&digits, 0.5) + 0.25, 0.5, rng.clone(),
             &[LineWidth(20.0), Color("#8000ff00"), Caption("mode interval (+/- 0.5)")]
         );
     let mut distribution = Figure::new();
     distribution.axes2d()
         .function(
             |x| probability_less_than(x, &digits),
-            (min(&digits), max(&digits)), 0.1,
+            min(&digits)..max(&digits), 0.1,
             &[]
         );
     let interval = 1.0/2.0;

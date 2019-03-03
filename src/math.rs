@@ -1,6 +1,5 @@
 extern crate statistical;
 
-use std::ops::Deref;
 use statistical::*;
 
 pub fn intervals(collection: &[f32], interval: f32) -> Vec<i32> {
