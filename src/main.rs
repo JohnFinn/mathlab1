@@ -24,6 +24,7 @@ fn print_description(data: &[f32]){
     println!("mode:           {}", math::mode(data, 0.5));
     println!("mean:           {}", mean(data)           );
     println!("variance:       {}", variance(data, None) );
+    println!("standart deviation {}", standard_deviation(data, None));
     println!("standart error: {}", standart_error(data) );
     println!("median:         {}", median(data)         );
     println!("max:            {}", max(data)            );
@@ -45,8 +46,8 @@ fn main() {
             &[Color("blue")],
         )
         .horizontal_fill(
-            mean(&digits), variance(&digits, None)*2.0, rng.clone(),
-            &[Color("#01ffffff"), Caption("variance")]
+            mean(&digits), standard_deviation(&digits, None)*2.0, rng.clone(),
+            &[Color("#01ffffff"), Caption("standard deviation")]
         )
         .horizontal_line(
             mean(&digits), rng.clone(),
