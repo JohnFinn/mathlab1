@@ -34,6 +34,8 @@ fn print_description(data: &[f32]){
     println!("quartille 3:    {}", percentile(data, 0.75));
     println!("skewness        {}", univariate::skewness(data, None, None));
     println!("kurtosis        {}", univariate::kurtosis(data, None, None));
+    println!("confidence mean interval +/-{}",  standart_error(data) * 1.96);
+    println!("confidence stdev interval [{} {}]",  standard_deviation(data, None) * 0.88, standard_deviation(data, None) * 1.16);
 }
 
 fn main() {
